@@ -52,9 +52,28 @@ To execute the main script:
 uv run main.py
 ```
 
-### Future Tasks
-- Implement data loading and preprocessing in `main.py`.
-- meaningful exploratory data analysis (EDA).
-- Train a machine learning model (e.g., Logistic Regression, Random Forest, XGBoost).
-- Evaluate model performance.
-- Generate predictions for `test.csv` in the format required by `sample_submission.csv`.
+To run the TabPFN inference:
+```bash
+uv run python tabpfn_inference.py
+```
+
+## Progress & Implementation Details
+
+### Completed Tasks
+- **Repository Setup**: Initialized Git, resolved `.gitignore` conflicts, and pushed to [GitHub](https://github.com/sean-sj-jung/AI-ds-intern.git).
+- **TabPFN Integration**: Implemented a classification pipeline using TabPFN (documented in `tabpfn_inference.py`).
+- **Prediction Generation**: Generated `submission.csv` for the test dataset.
+
+### TabPFN Implementation Notes
+- **Model Version**: Used `ModelVersion.V2` to avoid gated access requirements of V2.5.
+- **Data Strategy**: Combined the full `Original_Heart_Disease_Prediction.csv` with a random sample from `train.csv` to create a 1,000-sample context for TabPFN. This balances predictive power with inference speed.
+- **Resource Optimization**: 
+    - Set `device='cpu'` to avoid MPS (Metal Performance Shaders) memory limitations on macOS.
+    - Implemented batch inference (batch size: 2,000) for the 270,000 test rows to monitor progress and manage memory.
+    - Inference time is approximately 16 minutes on CPU.
+
+## Future Tasks
+- Refactor `main.py` to integrate the winning model strategy.
+- Perform meaningful exploratory data analysis (EDA).
+- Experiment with increasing TabPFN training context (up to 10,000 for V2) if more compute is available.
+- Compare TabPFN performance with other Gradient Boosted Decision Tree (GBDT) models like XGBoost or LightGBM.
