@@ -57,20 +57,27 @@ To run the TabPFN inference:
 uv run python tabpfn_inference.py
 ```
 
+To run the PyTabKit inference:
+```bash
+uv run python pytabkit_inference.py
+```
+
 ## Progress & Implementation Details
 
 ### Completed Tasks
 - **Repository Setup**: Initialized Git, resolved `.gitignore` conflicts, and pushed to [GitHub](https://github.com/sean-sj-jung/AI-ds-intern.git).
-- **TabPFN Integration**: Implemented a classification pipeline using TabPFN (documented in `tabpfn_inference.py`).
-- **Prediction Generation**: Generated `submission.csv` for the test dataset.
+- **TabPFN Integration**: Implemented a classification pipeline using TabPFN (documented in `tabpfn_inference.py`). Resulted in ~0.868 accuracy.
+- **PyTabKit Integration**: Implemented `RealMLP_TD_Classifier` from PyTabKit for potentially better performance.
+- **Prediction Generation**: Generated `submission.csv` (TabPFN) and `submission_pytabkit.csv` (PyTabKit).
 
 ### TabPFN Implementation Notes
-- **Model Version**: Used `ModelVersion.V2` to avoid gated access requirements of V2.5.
-- **Data Strategy**: Combined the full `Original_Heart_Disease_Prediction.csv` with a random sample from `train.csv` to create a 1,000-sample context for TabPFN. This balances predictive power with inference speed.
-- **Resource Optimization**: 
-    - Set `device='cpu'` to avoid MPS (Metal Performance Shaders) memory limitations on macOS.
-    - Implemented batch inference (batch size: 2,000) for the 270,000 test rows to monitor progress and manage memory.
-    - Inference time is approximately 16 minutes on CPU.
+... (previous notes)
+
+### PyTabKit Implementation Notes
+- **Model Choice**: `RealMLP_TD_Classifier` (RealMLP with Tuned Defaults).
+- **Data Strategy**: Used 30,000 training samples + original dataset.
+- **Performance**: Achieved training accuracy of 0.8810. Training took ~4 minutes on Apple Silicon GPU (MPS).
+- **Resources**: Utilized `mps` device for acceleration.
 
 ## Future Tasks
 - Refactor `main.py` to integrate the winning model strategy.
