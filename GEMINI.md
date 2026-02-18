@@ -62,22 +62,26 @@ To run the PyTabKit inference:
 uv run python pytabkit_inference.py
 ```
 
+To run the GBDT (CatBoost) inference:
+```bash
+uv run python gbdt_inference.py
+```
+
 ## Progress & Implementation Details
 
 ### Completed Tasks
 - **Repository Setup**: Initialized Git, resolved `.gitignore` conflicts, and pushed to [GitHub](https://github.com/sean-sj-jung/AI-ds-intern.git).
-- **TabPFN Integration**: Implemented a classification pipeline using TabPFN (documented in `tabpfn_inference.py`). Resulted in ~0.868 accuracy.
-- **PyTabKit Integration**: Implemented `RealMLP_TD_Classifier` from PyTabKit for potentially better performance.
-- **Prediction Generation**: Generated `submission.csv` (TabPFN) and `submission_pytabkit.csv` (PyTabKit).
+- **TabPFN Integration**: Implemented classification using TabPFN. Resulted in ~0.868 accuracy.
+- **PyTabKit Integration**: Implemented `RealMLP_TD_Classifier`. Resulted in ~0.880 accuracy.
+- **GBDT Integration**: Implemented XGBoost and CatBoost models. CatBoost achieved a validation accuracy of **0.8878**.
+- **Prediction Generation**: Generated `submission.csv` (TabPFN), `submission_pytabkit.csv` (PyTabKit), `submission_xgb.csv` (XGBoost), and `submission_cb.csv` (CatBoost).
 
-### TabPFN Implementation Notes
-... (previous notes)
-
-### PyTabKit Implementation Notes
-- **Model Choice**: `RealMLP_TD_Classifier` (RealMLP with Tuned Defaults).
-- **Data Strategy**: Used 30,000 training samples + original dataset.
-- **Performance**: Achieved training accuracy of 0.8810. Training took ~4 minutes on Apple Silicon GPU (MPS).
-- **Resources**: Utilized `mps` device for acceleration.
+### GBDT Implementation Notes
+- **Models**: XGBoost (with `hist` tree method) and CatBoost.
+- **Data Strategy**: Used the full training dataset (600k+ rows) combined with the original dataset.
+- **Categorical Features**: Explicitly handled categorical features in CatBoost (`Sex`, `Chest pain type`, `FBS over 120`, etc.).
+- **Results**: CatBoost showed the strongest local validation performance (0.8878 accuracy).
+- **System Setup**: Installed `libomp` via Homebrew to support OpenMP for XGBoost/LightGBM on macOS.
 
 ## Future Tasks
 - Refactor `main.py` to integrate the winning model strategy.
