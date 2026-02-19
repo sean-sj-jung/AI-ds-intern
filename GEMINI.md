@@ -67,21 +67,30 @@ To run the GBDT (CatBoost) inference:
 uv run python gbdt_inference.py
 ```
 
+To run the Advanced Ensemble:
+1. `uv run python advanced_models.py` (5-fold XGB, LGBM, CatBoost)
+2. `uv run python advanced_pytabkit.py` (PyTabKit Ensemble_TD)
+3. `uv run python ensemble_final.py` (Final Voting/Averaging)
+
 ## Progress & Implementation Details
 
 ### Completed Tasks
 - **Repository Setup**: Initialized Git, resolved `.gitignore` conflicts, and pushed to [GitHub](https://github.com/sean-sj-jung/AI-ds-intern.git).
-- **TabPFN Integration**: Implemented classification using TabPFN. Resulted in ~0.868 accuracy.
-- **PyTabKit Integration**: Implemented `RealMLP_TD_Classifier`. Resulted in ~0.880 accuracy.
-- **GBDT Integration**: Implemented XGBoost and CatBoost models. CatBoost achieved a validation accuracy of **0.8878**.
-- **Prediction Generation**: Generated `submission.csv` (TabPFN), `submission_pytabkit.csv` (PyTabKit), `submission_xgb.csv` (XGBoost), and `submission_cb.csv` (CatBoost).
+- **TabPFN Integration**: Resulted in ~0.868 accuracy.
+- **PyTabKit Integration**: Initially ~0.880. Advanced to `Ensemble_TD_Classifier` with 5-fold bagging.
+- **GBDT Integration**: Initially ~0.887. Advanced to 5-fold cross-validation with XGBoost, LightGBM, and CatBoost.
+- **Ensembling**: Developed a final ensemble strategy using both **Probability Averaging** and **Majority Voting** across 4 strong models.
+- **Prediction Generation**: Generated multiple submissions, culminating in `submission_final_ensemble_avg.csv` and `submission_final_ensemble_vote.csv`.
 
 ### GBDT Implementation Notes
-- **Models**: XGBoost (with `hist` tree method) and CatBoost.
-- **Data Strategy**: Used the full training dataset (600k+ rows) combined with the original dataset.
-- **Categorical Features**: Explicitly handled categorical features in CatBoost (`Sex`, `Chest pain type`, `FBS over 120`, etc.).
-- **Results**: CatBoost showed the strongest local validation performance (0.8878 accuracy).
-- **System Setup**: Installed `libomp` via Homebrew to support OpenMP for XGBoost/LightGBM on macOS.
+... (previous notes)
+
+### Advanced Ensemble Details
+- **Cross-Validation**: Used 5-fold StratifiedKFold to generate Out-Of-Fold (OOF) predictions and robust test averages for XGBoost, LightGBM, and CatBoost.
+- **Diversity**: Included `pytabkit`'s neural-based ensemble (`Ensemble_TD_Classifier`) to provide model diversity.
+- **Final Step**: Combined all models (XGB, LGBM, CB, PyTabKit) using two methods:
+    1. **Weighted Average Probability**: Smooths out individual model variances.
+    2. **Majority Vote**: Robust against outliers in probability predictions.
 
 ## Future Tasks
 - Refactor `main.py` to integrate the winning model strategy.
